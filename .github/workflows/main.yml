@@ -41,4 +41,11 @@ jobs:
       with:
         name: Dagram-Debug-APK
         path: dagram-android/app/build/outputs/apk/debug/*.apk
+        retention-days: 30      run: ./gradlew assembleDebug
+
+    - name: Upload APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: Dagram-Debug-APK
+        path: dagram-android/app/build/outputs/apk/debug/*.apk
         retention-days: 30
