@@ -27,6 +27,13 @@ jobs:
       - name: Download gradle-wrapper.jar
         run: mkdir -p gradle/wrapper && curl -L "https://raw.githubusercontent.com/gradle/gradle/v8.10.2/gradle/wrapper/gradle-wrapper.jar" -o gradle/wrapper/gradle-wrapper.jar
 
+      - name: Create gradle.properties
+        run: |
+          echo "android.useAndroidX=true" > gradle.properties
+          echo "android.enableJetifier=true" >> gradle.properties
+          echo "org.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8" >> gradle.properties
+          echo "kotlin.code.style=official" >> gradle.properties
+
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
