@@ -42,14 +42,19 @@ jobs:
             size=${sizes[$folder]}
             dir="app/src/main/res/$folder"
             mkdir -p "$dir"
-            convert -size ${size}x${size} xc:"#1a73e8" -fill white -gravity center \
-              -pointsize $((size/3)) -annotate 0 "D" \
-              "$dir/ic_launcher.png"
-            convert -size ${size}x${size} \
-              \( -size ${size}x${size} xc:none -fill "#1a73e8" -draw "circle $((size/2)),$((size/2)) $((size/2)),0" \) \
-              -fill white -gravity center -pointsize $((size/3)) -annotate 0 "D" \
-              "$dir/ic_launcher_round.png"
+            convert -size ${size}x${size} xc:"#1a73e8" -fill white -gravity center -pointsize $((size/3)) -annotate 0 "D" "$dir/ic_launcher.png"
+            convert -size ${size}x${size} xc:"#1a73e8" -fill white -gravity center -pointsize $((size/3)) -annotate 0 "D" "$dir/ic_launcher_round.png"
           done
+
+      - name: Fix missing sp import
+        run: |
+          FILE="app/src/main/java/com/dagram/app/ui/channels/CreateChannelScreen.kt"
+          if [ -f "$FILE" ]; then
+            if ! grep -q "import androidx.compose.ui.unit.sp" "$FILE"; then
+              sed -i 's/import androidx.compose.ui.unit.dp/import androidx.compose.ui.unit.dp\nimport androidx.compose.ui.unit.sp/' "$FILE"
+              echo "Fixed: added sp import"
+            fi
+          fi
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
