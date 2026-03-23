@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.hilt)
 }
@@ -17,19 +18,13 @@ android {
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables { useSupportLibrary = true }
-
-        // Only keep Arabic and English resources
         resourceConfigurations += listOf("ar", "en")
     }
 
     buildTypes {
         debug {
-            isMinifyEnabled = true
-            isShrinkResources = true
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+            isMinifyEnabled = false
+            isShrinkResources = false
         }
         release {
             isMinifyEnabled = true
@@ -41,15 +36,12 @@ android {
         }
     }
 
-    // Build separate APK per CPU architecture (reduces size by 60%)
     splits {
         abi {
             isEnable = true
             reset()
-            // arm64-v8a  = All modern phones (2016+)
-            // armeabi-v7a = Older phones
             include("arm64-v8a", "armeabi-v7a")
-            isUniversalApk = true  // Also build one universal APK
+            isUniversalApk = true
         }
     }
 
@@ -70,10 +62,6 @@ android {
         buildConfig = true
     }
 
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.15"
-    }
-
     packaging {
         resources {
             excludes += setOf(
@@ -91,46 +79,27 @@ android {
 }
 
 dependencies {
-    // Core Android
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
-
-    // Compose (BOM manages versions)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-
-    // Extended icons - R8 automatically removes unused ones after minification
     implementation(libs.androidx.material.icons.extended)
-
-    // Navigation
     implementation(libs.androidx.navigation.compose)
-
-    // Hilt DI
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
     implementation(libs.hilt.navigation.compose)
-
-    // Networking (lightweight)
     implementation(libs.retrofit)
     implementation(libs.retrofit.gson)
     implementation(libs.okhttp)
     implementation(libs.gson)
-
-    // Coroutines
     implementation(libs.coroutines.android)
-
-    // ViewModel
     implementation(libs.lifecycle.viewmodel.compose)
     implementation(libs.lifecycle.runtime.compose)
-
-    // Image Loading (Coil is lightweight ~2MB)
     implementation(libs.coil.compose)
-
-    // Debug only
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 }
