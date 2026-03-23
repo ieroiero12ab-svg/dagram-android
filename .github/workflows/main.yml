@@ -20,13 +20,13 @@ jobs:
           java-version: '17'
 
       - name: Grant permission
-        run: chmod +x gradlew
+        run: chmod +x dagram-android/gradlew
 
       - name: Build APK
-        run: ./gradlew assembleDebug
+        run: cd dagram-android && ./gradlew assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: Dagram-APK
-          path: app/build/outputs/apk/debug/app-debug.apk
+          path: dagram-android/app/build/outputs/apk/debug/app-debug.apk
